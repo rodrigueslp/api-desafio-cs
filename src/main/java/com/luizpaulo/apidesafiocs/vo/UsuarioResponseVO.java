@@ -16,6 +16,9 @@ public class UsuarioResponseVO {
         this.token = token;
     }
 
+    public UsuarioResponseVO() {
+    }
+
     public String getId() {
         return id;
     }

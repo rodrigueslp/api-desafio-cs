@@ -1,6 +1,7 @@
 package com.luizpaulo.apidesafiocs.resource;
 
 import com.luizpaulo.apidesafiocs.exception.login.EmailInvalidException;
+import com.luizpaulo.apidesafiocs.exception.login.ParametersLoginException;
 import com.luizpaulo.apidesafiocs.exception.login.PasswordInvalidException;
 import com.luizpaulo.apidesafiocs.service.LoginService;
 import com.luizpaulo.apidesafiocs.vo.LoginVO;
@@ -29,7 +30,7 @@ public class LoginResource {
                     ? ResponseEntity.status(HttpStatus.OK).body(usuarioVO)
                     : ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 
-        } catch (EmailInvalidException | PasswordInvalidException e) {
+        } catch (EmailInvalidException | PasswordInvalidException | ParametersLoginException e) {
             return ResponseEntity.status(e.getStatus()).body(new MensagemVO(e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

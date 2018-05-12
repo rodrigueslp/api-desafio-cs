@@ -27,7 +27,7 @@ public class UsuarioResource {
     @GetMapping
     public ResponseEntity listar() {
 
-        List<UsuarioResponseVO> listaUsuarioVO = usuarioService.getUsuariosVO();
+        List<UsuarioResponseVO> listaUsuarioVO = usuarioService.getListaUsuarioVO();
 
         return (listaUsuarioVO != null && !listaUsuarioVO.isEmpty())
                 ? ResponseEntity.status(HttpStatus.OK).body(listaUsuarioVO)

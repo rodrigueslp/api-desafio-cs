@@ -33,7 +33,7 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
-    public List<UsuarioResponseVO> getUsuariosVO() {
+    public List<UsuarioResponseVO> getListaUsuarioVO() {
 
         List<Usuario> usuarios = this.listAll();
 
@@ -61,20 +61,25 @@ public class UsuarioService {
         return (usuario != null) ? converteUsuarioParaUsuarioResponseVO(usuario) : null;
     }
 
-    public UsuarioResponseVO getUsuarioValido(UUID uuid, String token) throws TokenInvalidException, SessionInvalidException {
+    public UsuarioResponseVO getUsuarioValido(UUID uuid, String token) throws TokenInvalidException, SessionInvalidException, UUIDInvalidException {
         Usuario usuario = getUsuarioPorId(uuid);
+
+        if (usuario == null) throw new UUIDInvalidException();
 
         if (!usuario.getToken().equals(token)) throw new TokenInvalidException();
 
         final long diferencaMinutos = DataUtil.diferencaMinutos(usuario.getLastLogin(), LocalDateTime.now());
-        if (diferencaMinutos > 1) throw new SessionInvalidException();
+        if (diferencaMinutos > 30) throw new SessionInvalidException();
 
         return converteUsuarioParaUsuarioResponseVO(usuario);
 
     }
 
     public Usuario getUsuarioPorId(UUID uuid) {
-        return usuarioRepository.buscaPorId(uuid);
+
+        if(uuid != null) return usuarioRepository.buscaPorId(uuid);
+
+        return null;
     }
 
     private boolean validaListaUsuarios(List<Usuario> usuarios) {

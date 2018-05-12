@@ -1,6 +1,7 @@
 package com.luizpaulo.apidesafiocs.service;
 
 import com.luizpaulo.apidesafiocs.exception.login.EmailInvalidException;
+import com.luizpaulo.apidesafiocs.exception.login.ParametersLoginException;
 import com.luizpaulo.apidesafiocs.exception.login.PasswordInvalidException;
 import com.luizpaulo.apidesafiocs.vo.LoginVO;
 import com.luizpaulo.apidesafiocs.vo.UsuarioResponseVO;
@@ -13,7 +14,9 @@ public class LoginService {
     @Autowired
     private UsuarioService usuarioService;
 
-    public UsuarioResponseVO login(LoginVO loginVO) throws EmailInvalidException, PasswordInvalidException {
+    public UsuarioResponseVO login(LoginVO loginVO) throws EmailInvalidException, PasswordInvalidException, ParametersLoginException {
+
+        if (loginVO == null) throw new ParametersLoginException();
 
         if(usuarioService.getUsuarioVOPorEmail(loginVO.getEmail()) == null)
             throw new EmailInvalidException();
