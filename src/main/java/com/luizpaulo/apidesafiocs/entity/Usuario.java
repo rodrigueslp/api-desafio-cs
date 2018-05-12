@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -26,20 +27,20 @@ public class Usuario {
     private List<Telefone> phones;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm", locale = "pt-BR", timezone = "Brazil/East")
-    private Date created;
+    private LocalDateTime created;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm", locale = "pt-BR", timezone = "Brazil/East")
-    private Date modified;
+    private LocalDateTime modified;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm", locale = "pt-BR", timezone = "Brazil/East")
-    private Date lastLogin;
+    private LocalDateTime lastLogin;
 
     private String token;
 
     public Usuario() {
         this.setId(UUID.randomUUID());
-        this.setCreated(new Date());
-        this.setLastLogin(new Date());
+        this.setCreated(LocalDateTime.now());
+        this.setLastLogin(LocalDateTime.now());
     }
 
     public UUID getId() {
@@ -74,27 +75,27 @@ public class Usuario {
         this.password = password;
     }
 
-    public Date getCreated() {
+    public LocalDateTime getCreated() {
         return created;
     }
 
-    public void setCreated(Date created) {
+    public void setCreated(LocalDateTime created) {
         this.created = created;
     }
 
-    public Date getModified() {
+    public LocalDateTime getModified() {
         return modified;
     }
 
-    public void setModified(Date modified) {
+    public void setModified(LocalDateTime modified) {
         this.modified = modified;
     }
 
-    public Date getLastLogin() {
+    public LocalDateTime getLastLogin() {
         return lastLogin;
     }
 
-    public void setLastLogin(Date lastLogin) {
+    public void setLastLogin(LocalDateTime lastLogin) {
         this.lastLogin = lastLogin;
     }
 

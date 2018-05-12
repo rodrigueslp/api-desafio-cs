@@ -1,4 +1,4 @@
-package com.luizpaulo.apidesafiocs.exception;
+package com.luizpaulo.apidesafiocs.exception.login;
 
 import org.springframework.http.HttpStatus;
 

@@ -1,6 +1,9 @@
 package com.luizpaulo.apidesafiocs.resource;
 
 import com.luizpaulo.apidesafiocs.entity.Usuario;
+import com.luizpaulo.apidesafiocs.exception.authorization.SessionInvalidException;
+import com.luizpaulo.apidesafiocs.exception.authorization.TokenInvalidException;
+import com.luizpaulo.apidesafiocs.exception.authorization.UUIDInvalidException;
 import com.luizpaulo.apidesafiocs.service.UsuarioService;
 import com.luizpaulo.apidesafiocs.util.JwtUtil;
 import com.luizpaulo.apidesafiocs.vo.MensagemVO;
@@ -10,9 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.websocket.server.PathParam;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -53,9 +56,21 @@ public class UsuarioResource {
 
     @GetMapping
     @RequestMapping("/{id}")
-    public ResponseEntity getPerfilUsuario(@PathParam("id") String id, HttpServletResponse response) {
-        String token = response.getHeader("Authorization");
-        return null;
+    public ResponseEntity getPerfilUsuario(@PathVariable("id") String id, HttpServletRequest request) {
+
+        String token = request.getHeader("Authorization");
+
+        try {
+
+            usuarioService.validaToken(token);
+            final UUID uuidUsuario = usuarioService.getUuidUsuario(id);
+
+            UsuarioResponseVO usuarioVO = usuarioService.getUsuarioValido(uuidUsuario, token);
+            return ResponseEntity.status(HttpStatus.OK).body(usuarioVO);
+
+        } catch (TokenInvalidException | UUIDInvalidException | SessionInvalidException e) {
+            return ResponseEntity.status(e.getStatus()).body(new MensagemVO(e.getMessage()));
+        }
 
     }
 
