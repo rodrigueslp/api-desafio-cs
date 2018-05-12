@@ -5,6 +5,7 @@ import com.luizpaulo.apidesafiocs.exception.authorization.SessionInvalidExceptio
 import com.luizpaulo.apidesafiocs.exception.authorization.TokenInvalidException;
 import com.luizpaulo.apidesafiocs.exception.authorization.UUIDInvalidException;
 import com.luizpaulo.apidesafiocs.service.UsuarioService;
+import com.luizpaulo.apidesafiocs.util.HashUtil;
 import com.luizpaulo.apidesafiocs.util.JwtUtil;
 import com.luizpaulo.apidesafiocs.vo.MensagemVO;
 import com.luizpaulo.apidesafiocs.vo.UsuarioResponseVO;
@@ -41,6 +42,7 @@ public class UsuarioResource {
         try {
 
             usuario.setToken(JwtUtil.getToken(usuario.getName(), usuario.getEmail()));
+            usuario.setPassword(HashUtil.encripty(usuario.getPassword()));
             Usuario usuarioSalvo = usuarioService.save(usuario);
 
             UsuarioResponseVO usuarioVO = usuarioService.converteUsuarioParaUsuarioResponseVO(usuarioSalvo);
