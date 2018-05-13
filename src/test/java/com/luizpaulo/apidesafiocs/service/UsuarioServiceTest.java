@@ -4,6 +4,7 @@ import com.luizpaulo.apidesafiocs.entity.Usuario;
 import com.luizpaulo.apidesafiocs.exception.authorization.SessionInvalidException;
 import com.luizpaulo.apidesafiocs.exception.authorization.TokenInvalidException;
 import com.luizpaulo.apidesafiocs.exception.authorization.UUIDInvalidException;
+import com.luizpaulo.apidesafiocs.exception.register.EmailExistsException;
 import com.luizpaulo.apidesafiocs.repository.UsuarioRepository;
 import com.luizpaulo.apidesafiocs.vo.UsuarioResponseVO;
 import org.hamcrest.CoreMatchers;
@@ -109,6 +110,18 @@ public class UsuarioServiceTest {
         when(usuarioRepository.buscaPorId(UUID.fromString("1e16f391-2f8b-44b6-89d9-1d744f6f8c81"))).thenReturn(usuario);
         UsuarioResponseVO usuarioValido = usuarioService.getUsuarioValido(UUID.fromString("1e16f391-2f8b-44b6-89d9-1d744f6f8c81"), usuario.getToken());
         assertThat(usuarioValido, instanceOf(UsuarioResponseVO.class));
+
+    }
+
+    @Test
+    public void validaUsuario_comEmailJaCadastradoNaBase_deveInvocarEmailExistsException() throws Exception {
+        try {
+            when(usuarioRepository.buscaPorEmail("teste@teste.com")).thenReturn(new Usuario());
+            usuarioService.validaUsuario("teste@teste.com");
+            fail("Teste falhou");
+        } catch (EmailExistsException e) {
+            assertThat(e.getMessage(), is("Este email já esta cadastrado."));
+        }
 
     }
 

@@ -4,6 +4,7 @@ import com.luizpaulo.apidesafiocs.entity.Usuario;
 import com.luizpaulo.apidesafiocs.exception.authorization.SessionInvalidException;
 import com.luizpaulo.apidesafiocs.exception.authorization.TokenInvalidException;
 import com.luizpaulo.apidesafiocs.exception.authorization.UUIDInvalidException;
+import com.luizpaulo.apidesafiocs.exception.register.EmailExistsException;
 import com.luizpaulo.apidesafiocs.service.UsuarioService;
 import com.luizpaulo.apidesafiocs.util.HashUtil;
 import com.luizpaulo.apidesafiocs.util.JwtUtil;
@@ -41,6 +42,8 @@ public class UsuarioResource {
 
         try {
 
+            usuarioService.validaUsuario(usuario.getEmail());
+
             usuario.setToken(JwtUtil.getToken(usuario.getName(), usuario.getEmail()));
             usuario.setPassword(HashUtil.encripty(usuario.getPassword()));
             Usuario usuarioSalvo = usuarioService.save(usuario);
@@ -49,7 +52,9 @@ public class UsuarioResource {
 
             return ResponseEntity.status(HttpStatus.CREATED).body(usuarioVO);
 
-        } catch (Exception e) {
+        } catch(EmailExistsException e) {
+            return ResponseEntity.status(e.getStatus()).body(new MensagemVO(e.getMessage()));
+        } catch(Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new MensagemVO("Ocorreu um erro interno, estamos trabalhando para restabelecer o mais rápido possível."));
         }

@@ -4,6 +4,7 @@ import com.luizpaulo.apidesafiocs.entity.Usuario;
 import com.luizpaulo.apidesafiocs.exception.authorization.SessionInvalidException;
 import com.luizpaulo.apidesafiocs.exception.authorization.TokenInvalidException;
 import com.luizpaulo.apidesafiocs.exception.authorization.UUIDInvalidException;
+import com.luizpaulo.apidesafiocs.exception.register.EmailExistsException;
 import com.luizpaulo.apidesafiocs.repository.UsuarioRepository;
 import com.luizpaulo.apidesafiocs.util.DataUtil;
 import com.luizpaulo.apidesafiocs.vo.LoginVO;
@@ -62,6 +63,7 @@ public class UsuarioService {
     }
 
     public UsuarioResponseVO getUsuarioValido(UUID uuid, String token) throws TokenInvalidException, SessionInvalidException, UUIDInvalidException {
+
         Usuario usuario = getUsuarioPorId(uuid);
 
         if (usuario == null) throw new UUIDInvalidException();
@@ -110,5 +112,10 @@ public class UsuarioService {
 
         return UUID.fromString(id);
 
+    }
+
+    public void validaUsuario(String email) throws EmailExistsException {
+        UsuarioResponseVO usuarioVO = getUsuarioVOPorEmail(email);
+        if(usuarioVO != null) throw new EmailExistsException();
     }
 }
